@@ -13,7 +13,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     // Catching and using data sent from another Route
-    data = ModalRoute.of(context).settings.arguments;
+    // data = ModalRoute.of(context).settings.arguments;
+
+    // Map method isNotEmpty
+    data = data.isNotEmpty ? data : ModalRoute.of(context).settings.arguments;
+
     print(data);
 
     // set background
@@ -36,8 +40,18 @@ class _HomeState extends State<Home> {
             child: Column(
               children: <Widget>[
                 FlatButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/location');
+                  onPressed: () async {
+                   dynamic result = await Navigator.pushNamed(context, '/location');
+                   if(result != null){
+                     setState(() {
+                       data = {
+                         'time': result['time'],
+                         'location': result['location'],
+                         'isDayTime': result['isDayTime'],
+                         'flag': result['flag']
+                       };
+                     });
+                   }
                   },
                   icon: Icon(
                     Icons.edit_location,
